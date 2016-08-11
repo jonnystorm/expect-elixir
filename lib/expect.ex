@@ -77,7 +77,7 @@ defmodule Expect do
   end
 
   defp driver do
-    Application.get_env :expect, :driver
+    Application.get_env :expect_ex, :driver
   end
 
   defp timed_out?(timer) do
