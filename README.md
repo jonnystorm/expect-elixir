@@ -46,7 +46,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   iex> expect proc do
     ~r/>$/ ->
-      IO.puts inspect(buffer)
+      buffer
 
   after
     5000 ->
