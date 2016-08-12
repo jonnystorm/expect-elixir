@@ -483,8 +483,7 @@ is returned.</p>
 <h2>Examples</h2>
 <pre><code class="iex elixir">iex&gt; expect(spawned_process, 2_000, ~r/&gt;$/)
 {:ok, [&quot;some data</code></pre>
-<p>“, “some more data&gt;</p>
-<p>“]}</p>
+<p>“, “some more data&gt;”]}</p>
 <pre><code class="iex elixir">iex&gt; expect(spawned_process, 2_000, _, fn _ -&gt; :got_something end)
 {:ok, :got_something}</code></pre>
 
