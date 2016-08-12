@@ -175,7 +175,7 @@ defmodule Expect do
   ## Examples
 
       iex> expect(spawned_process, 2_000, ~r/>$/)
-      {:ok, ["some data\n\r", "some more data>\n\r"]}
+      {:ok, ["some data\n\r", "some more data>"]}
 
       iex> expect(spawned_process, 2_000, _, fn _ -> :got_something end)
       {:ok, :got_something}
