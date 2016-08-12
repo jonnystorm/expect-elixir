@@ -1,4 +1,8 @@
 defmodule Expect.Driver do
+  @moduledoc """
+  A behaviour for Expect drivers.
+  """
+
   @doc "Stop a spawned process."
   @callback stop(process :: %{}) :: :ok
 
@@ -6,5 +10,5 @@ defmodule Expect.Driver do
   @callback send(process :: %{}, data :: binary) :: :ok
 
   @doc "Spawn a process for `command`."
-  @callback spawn(command :: String.t) :: {:ok, %{}} | {:error, any}
+  @callback spawn(command :: String.t) :: {:ok, %{}}
 end

@@ -1,4 +1,6 @@
 defmodule Expect.Driver.Porcelain do
+  @moduledoc false
+
   @behaviour Expect.Driver
 
   def stop(process) do

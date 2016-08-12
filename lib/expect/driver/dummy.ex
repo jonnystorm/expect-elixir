@@ -1,4 +1,6 @@
 defmodule Expect.Driver.Dummy do
+  @moduledoc false
+
   @behaviour Expect.Driver
 
   def stop(_),    do: :ok

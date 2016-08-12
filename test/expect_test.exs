@@ -1,7 +1,5 @@
 defmodule ExpectTest do
   use ExUnit.Case
-  doctest Expect
-
   use Expect
 
   test "expect block macro times out" do
@@ -13,6 +11,16 @@ defmodule ExpectTest do
       after
         1 ->
           :it_timed_out
+      end)
+  end
+
+  test "expect block macro matches :default on exit" do
+    send self, {nil, :result, %{status: 1}}
+
+    assert {:ok, :it_exited} ==
+      (expect %{pid: nil} do
+        :default ->
+          :it_exited
       end)
   end
 
@@ -62,6 +70,20 @@ defmodule ExpectTest do
 
   test "expect line macro times out" do
     assert expect(%{pid: nil}, 1, ~r/>$/) == {:error, :etimedout}
+  end
+
+  test "expect line macro matches :timeout" do
+    assert expect(%{pid: nil}, 1, :timeout) == {:ok, []}
+  end
+
+  test "expect line macro matches :default on timeout" do
+    assert expect(%{pid: nil}, 1, :default) == {:ok, []}
+  end
+
+  test "expect line macro matches :default on exit" do
+    send self, {nil, :result, %{status: 1}}
+
+    assert expect(%{pid: nil}, 1, :default) == {:ok, []}
   end
 
   test "expect line macro matches any" do
