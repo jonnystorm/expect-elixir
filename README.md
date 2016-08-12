@@ -1,6 +1,10 @@
 # Expect-elixir
 
+[![Build Status](https://travis-ci.org/jonnystorm/expect-elixir.svg?branch=master)](https://travis-ci.org/jonnystorm/expect-elixir)
+
 Tiny TCL/Expect-ish interface for the excellent [Porcelain](https://github.com/alco/porcelain) library.
+
+See the [API documentation](https://jonnystorm.github.io/expect-elixir).
 
 ## Installation
 
