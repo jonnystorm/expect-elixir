@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.0">
-    <title>Expect – expect-elixir v0.0.3</title>
+    <title>Expect – expect-elixir v0.0.4</title>
     <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         expect-elixir
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.3
+        v0.0.4
       </h2>
     </div>
     
@@ -59,11 +59,11 @@
 
 
       <h1>
-        <small class="visible-xs">expect-elixir v0.0.3</small>
+        <small class="visible-xs">expect-elixir v0.0.4</small>
         Expect
         
         
-          <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L6" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -91,7 +91,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#t:expect_error/0">expect_error()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#t:pattern/0">pattern()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:process/0">process()</a>
   </div>
   
 </div>
@@ -115,10 +127,37 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#do_expect/3">do_expect(map, timeout, expects)</a>
+    <a href="#exp_close/1">exp_close(process)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Called by the <a href="#expect/2"><code class="inline">expect/2</code></a>, <code class="inline">expect/3</code>, and <a href="#expect/4"><code class="inline">expect/4</code></a> macros</p>
+    <div class="summary-synopsis"><p>Calls <a href="Expect.html#close/1"><code class="inline">Expect.close/1</code></a>. Imported with <code class="inline">use Expect</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#exp_send/2">exp_send(process, data)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Calls <code class="inline">Expect.send/1</code>. Imported with <code class="inline">use Expect</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#exp_spawn/1">exp_spawn(command)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Calls <a href="Expect.html#spawn/1"><code class="inline">Expect.spawn/1</code></a>. Imported with <code class="inline">use Expect</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#expect/3">expect(map, timeout \\ 10000, pattern_or_fun)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Match and process incoming data from spawned process</p>
 </div>
   
 </div>
@@ -145,60 +184,6 @@
 
 
           
-  <div class="summary-macros summary">
-    <h2>
-      <a href="#macros">Macros</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#exp_close/1">exp_close(process)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>An alias for <a href="Expect.html#close/1"><code class="inline">Expect.close/1</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#exp_send/2">exp_send(process, data)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>An alias for <a href="Expect.html#send/2"><code class="inline">Expect.send/2</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#exp_spawn/1">exp_spawn(command)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>An alias for <a href="Expect.html#spawn/1"><code class="inline">Expect.spawn/1</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#expect/2">expect(process, list)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Match incoming data and execute the corresponding block</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#expect/4">expect(process, timeout, pattern, fun \\ quote() do
-  &amp;(&amp;1)
-end)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Match incoming data on <code class="inline">pattern</code> and execute <code class="inline">fun/1</code></p>
-</div>
-  
-</div>
-
-  </div>
-
 
           
 
@@ -214,8 +199,18 @@ end)</a>
             Types
           </h1>
           <div class="types-list">
-            <div id="t:pattern/0" class="type-detail">
+            <div id="t:expect_error/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:expect_error/0">expect_error</a> ::
+  {:error, :etimedout} |
+  {:error, :exit, non_neg_integer, binary}</code></pre>
+  
+</div>
+<div id="t:pattern/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:pattern/0">pattern</a> :: binary | <a href="http://elixir-lang.org/docs/stable/elixir/Regex.html#t:t/0">Regex.t</a></code></pre>
+  
+</div>
+<div id="t:process/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:process/0">process</a> :: %{pid: pid}</code></pre>
   
 </div>
 
@@ -238,7 +233,7 @@ end)</a>
     </a>
     <span class="signature">close(process)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L282" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L54" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -249,7 +244,7 @@ end)</a>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">close(%{}) :: :ok</code></pre>
+          <pre><code class="elixir">close(<a href="#t:process/0">process</a>) :: :ok</code></pre>
         
       </div>
     </div>
@@ -259,14 +254,71 @@ end)</a>
 
   </section>
 </div>
-<div class="detail" id="do_expect/3">
+<div class="detail" id="exp_close/1">
   <div class="detail-header">
-    <a href="#do_expect/3" class="detail-link" title="Link to this function">
+    <a href="#exp_close/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">do_expect(map, timeout, expects)</span>
+    <span class="signature">exp_close(process)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L271" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L33" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Calls <a href="Expect.html#close/1"><code class="inline">Expect.close/1</code></a>. Imported with <code class="inline">use Expect</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="exp_send/2">
+  <div class="detail-header">
+    <a href="#exp_send/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">exp_send(process, data)</span>
+    
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L38" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Calls <code class="inline">Expect.send/1</code>. Imported with <code class="inline">use Expect</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="exp_spawn/1">
+  <div class="detail-header">
+    <a href="#exp_spawn/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">exp_spawn(command)</span>
+    
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L43" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Calls <a href="Expect.html#spawn/1"><code class="inline">Expect.spawn/1</code></a>. Imported with <code class="inline">use Expect</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="expect/3">
+  <div class="detail-header">
+    <a href="#expect/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">expect(map, timeout \\ 10000, pattern_or_fun)</span>
+    
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L175" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -277,16 +329,94 @@ end)</a>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">do_expect(%{}, pos_integer, [{<a href="#t:pattern/0">pattern</a>, function}]) ::
+          <pre><code class="elixir">expect(<a href="#t:process/0">process</a>, pos_integer, <a href="#t:pattern/0">pattern</a>) ::
+  nil |
+  <a href="#t:expect_error/0">expect_error</a></code></pre>
+        
+          <pre><code class="elixir">expect(<a href="#t:process/0">process</a>, pos_integer, function) ::
   {:ok, any} |
-  {:error, :exit, non_neg_integer, list} |
-  {:error, :etimedout}</code></pre>
+  <a href="#t:expect_error/0">expect_error</a></code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Called by the <a href="#expect/2"><code class="inline">expect/2</code></a>, <code class="inline">expect/3</code>, and <a href="#expect/4"><code class="inline">expect/4</code></a> macros.</p>
+    <p>Match and process incoming data from spawned process.</p>
+<p><code class="inline">expect</code> behaves differently contingent on whether it is given a function or a
+bare pattern.</p>
+<p>When a bare binary or regex pattern is provided, <code class="inline">expect</code> returns one of the
+following.</p>
+<table>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tr>
+<td style="text-align: left">on match</td><td style="text-align: left">nil</td>
+</tr>
+<tr>
+<td style="text-align: left">on timeout</td><td style="text-align: left"><code class="inline">{:timeout, buffer}</code> or <code class="inline">{:default, buffer}</code></td>
+</tr>
+<tr>
+<td style="text-align: left">on exit</td><td style="text-align: left"><code class="inline">{:default, buffer}</code></td>
+</tr>
+</table>
+<p>This behavior is useful for when you don’t care about the incoming data so
+much as the fact that it arrived (and matched your pattern).</p>
+<p>When a function is provided, <code class="inline">expect</code> keeps a buffer of unmatched data which
+is passed to <code class="inline">fun</code> when: new data arrives; the timeout period expires; the
+spawned process exits. In each case, the value(s) passed to <code class="inline">fun</code> take(s) one
+of the following forms.</p>
+<table>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tr>
+<td style="text-align: left">on match</td><td style="text-align: left"><code class="inline">{:data, buffer}</code></td>
+</tr>
+<tr>
+<td style="text-align: left">on timeout</td><td style="text-align: left"><code class="inline">{:timeout, buffer}</code>, then <code class="inline">{:default, buffer}</code></td>
+</tr>
+<tr>
+<td style="text-align: left">on exit</td><td style="text-align: left"><code class="inline">{:default, buffer}</code></td>
+</tr>
+</table>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; expect spawned_process, &quot;# &quot;
+nil
+
+iex&gt; expect spawned_process, fn {event, buffer} -&gt;
+  cond do
+    buffer =~ ~r/&gt;$/ -&gt;
+      :match
+
+    buffer =~ &quot;a string&quot; -&gt;
+      buffer
+
+    event == :timeout -&gt;
+      :it_timed_out
+  end
+end
+{:ok, :match}
+
+iex&gt; expect spawned_process, fn {_, buffer} -&gt; buffer end
+{:ok, [&quot;some data</code></pre>
+<p>“, “some more data
+“]}</p>
+<pre><code class="iex elixir">iex&gt; expect process_without_data, fn {:data, buffer} -&gt; buffer end
+{:error, :etimedout}
+
+iex&gt; expect spawned_process, fn buffer -&gt;
+  cond do
+    buffer =~ &quot;non-matching pattern&quot; -&gt;
+      buffer
+  end
+end
+{:error, :etimedout}
+
+iex&gt; expect spawned_process, fn {:timeout, _} -&gt; :it_timed_out end
+{:ok, :it_timed_out}</code></pre>
 
   </section>
 </div>
@@ -297,7 +427,7 @@ end)</a>
     </a>
     <span class="signature">send(process, data)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L291" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L207" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -308,7 +438,7 @@ end)</a>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">send(%{}, binary) :: :ok</code></pre>
+          <pre><code class="elixir">send(<a href="#t:process/0">process</a>, binary) :: :ok</code></pre>
         
       </div>
     </div>
@@ -325,7 +455,7 @@ end)</a>
     </a>
     <span class="signature">spawn(command)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L300" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L216" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -336,7 +466,7 @@ end)</a>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">spawn(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok, %{}}</code></pre>
+          <pre><code class="elixir">spawn(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok, <a href="#t:process/0">process</a>}</code></pre>
         
       </div>
     </div>
@@ -350,147 +480,6 @@ end)</a>
         </section>
       
 
-      
-        <section id="macros" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#macros">
-              <i class="icon-link"></i>
-            </a>
-            Macros
-          </h1>
-          <div class="detail" id="exp_close/1">
-  <div class="detail-header">
-    <a href="#exp_close/1" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">exp_close(process)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L19" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>An alias for <a href="Expect.html#close/1"><code class="inline">Expect.close/1</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="exp_send/2">
-  <div class="detail-header">
-    <a href="#exp_send/2" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">exp_send(process, data)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L37" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>An alias for <a href="Expect.html#send/2"><code class="inline">Expect.send/2</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="exp_spawn/1">
-  <div class="detail-header">
-    <a href="#exp_spawn/1" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">exp_spawn(command)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L28" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>An alias for <a href="Expect.html#spawn/1"><code class="inline">Expect.spawn/1</code></a>.</p>
-
-  </section>
-</div>
-<div class="detail" id="expect/2">
-  <div class="detail-header">
-    <a href="#expect/2" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">expect(process, list)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L93" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>Match incoming data and execute the corresponding block.</p>
-<p>Matched data is accessed from within a block via the <code class="inline">buffer</code> variable.</p>
-<p>If no more specific match is found, the first block matching <code class="inline">_</code> is executed.
-If no data is received within the timeout period, no block matching <code class="inline">_</code> will
-be executed.</p>
-<p>If no match is found within the timeout period, the first block matching
-<code class="inline">:timeout</code> is executed, or else the first block matching <code class="inline">:default</code> is
-executed. Otherwise, <code class="inline">{:error, :etimedout}</code> is returned.</p>
-<h2>Examples</h2>
-<pre><code class="iex elixir">iex&gt; expect spawned_process do
-  ~r/&gt;$/ -&gt;
-    :match
-
-  &quot;a string data may contain&quot; -&gt;
-    buffer
-
-after
-  2_000 -&gt;
-    :not_what_i_expected
-end
-{:ok, :match}</code></pre>
-
-  </section>
-</div>
-<div class="detail" id="expect/4">
-  <div class="detail-header">
-    <a href="#expect/4" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">expect(process, timeout, pattern, fun \\ quote() do
-  &amp;(&amp;1)
-end)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L184" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-  <section class="docstring">
-    <p>Match incoming data on <code class="inline">pattern</code> and execute <code class="inline">fun/1</code>.</p>
-<p>Matched data is accessed from within <code class="inline">fun/1</code> with <code class="inline">buffer</code>.</p>
-<p>If <code class="inline">pattern</code> is <code class="inline">_</code> and data is received, <code class="inline">fun</code> is executed. If <code class="inline">pattern</code> is
-<code class="inline">_</code> and no data is received within the timeout period, <code class="inline">{:error, :etimedout}</code>
-is returned.</p>
-<p>If no match is found within the timeout period and <code class="inline">pattern</code> is <code class="inline">:timeout</code>,
-<code class="inline">fun</code> is executed. If no match is found within the timeout period and
-<code class="inline">pattern</code> is <code class="inline">:default</code>, <code class="inline">fun</code> is executed. Otherwise, <code class="inline">{:error, :etimedout}</code>
-is returned.</p>
-<h2>Examples</h2>
-<pre><code class="iex elixir">iex&gt; expect(spawned_process, 2_000, ~r/&gt;$/)
-{:ok, [&quot;some data</code></pre>
-<p>“, “some more data&gt;”]}</p>
-<pre><code class="iex elixir">iex&gt; expect(spawned_process, 2_000, _, fn _ -&gt; :got_something end)
-{:ok, :got_something}</code></pre>
-
-  </section>
-</div>
-
-        </section>
       
 
       

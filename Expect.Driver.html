@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.0">
-    <title>Expect.Driver – expect-elixir v0.0.3</title>
+    <title>Expect.Driver – expect-elixir v0.0.4</title>
     <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         expect-elixir
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.3
+        v0.0.4
       </h2>
     </div>
     
@@ -59,13 +59,13 @@
 
 
       <h1>
-        <small class="visible-xs">expect-elixir v0.0.3</small>
+        <small class="visible-xs">expect-elixir v0.0.4</small>
         Expect.Driver
         
           <small>behaviour</small>
         
         
-          <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L6" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -87,6 +87,19 @@
             Summary
           </h1>
           
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:process/0">process()</a>
+  </div>
+  
+</div>
+
+  </div>
+
 
           
 
@@ -98,6 +111,15 @@
       <a href="#callbacks">Callbacks</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:close/1">close(process)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Close a spawned process</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#c:send/2">send(process, data)</a>
   </div>
@@ -115,15 +137,6 @@
 </div>
   
 </div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:stop/1">stop(process)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>Stop a spawned process</p>
-</div>
-  
-</div>
 
   </div>
 
@@ -131,6 +144,22 @@
         </section>
       
 
+      
+        <section id="types" class="types details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div id="t:process/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:process/0">process</a> :: %{pid: pid | nil}</code></pre>
+  
+</div>
+
+          </div>
+        </section>
       
 
       
@@ -145,14 +174,14 @@
             </a>
             Callbacks
           </h1>
-          <div class="detail" id="c:send/2">
+          <div class="detail" id="c:close/1">
   <div class="detail-header">
-    <a href="#c:send/2" class="detail-link" title="Link to this callback">
+    <a href="#c:close/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">send(process, data)</span>
+    <span class="signature">close(process)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L10" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L14" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -163,7 +192,35 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">send(process :: %{}, data :: binary) :: :ok</code></pre>
+          <pre><code class="elixir">close(<a href="#t:process/0">process</a>) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Close a spawned process.</p>
+
+  </section>
+</div>
+<div class="detail" id="c:send/2">
+  <div class="detail-header">
+    <a href="#c:send/2" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send(process, data)</span>
+    
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L17" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">send(<a href="#t:process/0">process</a>, data :: binary) :: :ok</code></pre>
         
       </div>
     </div>
@@ -180,7 +237,7 @@
     </a>
     <span class="signature">spawn(command)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L13" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L20" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -191,41 +248,13 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">spawn(command :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok, %{}}</code></pre>
+          <pre><code class="elixir">spawn(command :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="#t:process/0">process</a></code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
     <p>Spawn a process for <code class="inline">command</code>.</p>
-
-  </section>
-</div>
-<div class="detail" id="c:stop/1">
-  <div class="detail-header">
-    <a href="#c:stop/1" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">stop(process)</span>
-    
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect/driver.ex#L7" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">stop(process :: %{}) :: :ok</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Stop a spawned process.</p>
 
   </section>
 </div>

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.0">
-    <title>Expect-elixir – expect-elixir v0.0.3</title>
+    <title>Expect-elixir – expect-elixir v0.0.4</title>
     <link rel="stylesheet" href="dist/app-9c1e3d5aa2.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -26,7 +26,7 @@
         expect-elixir
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.3
+        v0.0.4
       </h2>
     </div>
     
@@ -59,7 +59,8 @@
 
 
 <h1>Expect-elixir</h1>
-<p><a href="https://travis-ci.org/jonnystorm/expect-elixir"><img src="https://travis-ci.org/jonnystorm/expect-elixir.svg?branch=master" alt="Build Status"/></a></p>
+<p><a href="https://travis-ci.org/jonnystorm/expect-elixir"><img src="https://travis-ci.org/jonnystorm/expect-elixir.svg?branch=master" alt="Build Status"/></a>
+<a href="https://coveralls.io/github/jonnystorm/expect-elixir?branch=master"><img src="https://coveralls.io/repos/github/jonnystorm/expect-elixir/badge.svg?branch=master" alt="Coverage Status"/></a></p>
 <p>Tiny TCL/Expect-ish interface for the excellent <a href="https://github.com/alco/porcelain">Porcelain</a> library.</p>
 <p>See the <a href="https://jonnystorm.github.io/expect-elixir">API documentation</a>.</p>
 <h2 id="installation" class="section-heading">
@@ -72,8 +73,7 @@
 </ol>
 <pre><code class="elixir">    def deps do
       [{:expect_ex, git: &quot;https://github.com/jonnystorm/expect.git&quot;}]
-    end
-</code></pre>
+    end</code></pre>
 <ol>
 <li>Ensure <code class="inline">expect_ex</code> is started before your application:
 </li>
@@ -87,33 +87,33 @@
 </h2><pre><code class="elixir">  iex&gt; use Expect
   Expect
 
-  iex&gt; proc = exp_spawn &quot;telnet 192.0.2.3&quot;
+  iex&gt; process = exp_spawn &quot;telnet 192.0.2.3&quot;
   %Porcelain.Process{err: nil, out: {:send, #PID&lt;0.143.0&gt;}, pid: #PID&lt;0.146.0&gt;}
 
-  iex&gt; expect proc, 2000, &quot;Password: &quot;, &amp;(&amp;1)
-  {:ok, [&quot;Trying 192.0.2.3...\nConnected to 192.0.2.3.\nEscape character is &#39;^]&#39;.\n&quot;,
-   &quot;\r\n\r\nUser Access Verification\r\n\r\nPassword: &quot;]}
+  iex&gt; expect process, &quot;Password: &quot;
+  nil
 
-  iex&gt; exp_send proc, &quot;admin\r&quot;
+  iex&gt; exp_send process, &quot;admin\r&quot;
   :ok
 
-  iex&gt; expect proc, 2000, ~r/&gt;$/, &amp;(&amp;1)
-  {:ok, [&quot;\r\nR1&gt;&quot;]}
+  iex&gt; expect process, 1_000, ~r/&gt;$/
+  nil
 
-  iex&gt; exp_send proc, &quot;sho ip route\r&quot;
+  iex&gt; exp_send process, &quot;sho ip route\r&quot;
   :ok
 
-  iex&gt; expect proc do
-    ~r/&gt;$/ -&gt;
-      buffer
+  iex&gt; expect process, 1_000, fn {event, buffer} -&gt;
+    cond do
+      buffer =~ ~r/&gt;$/ -&gt;
+        buffer
 
-  after
-    5000 -&gt;
-      :not_what_i_expected  # Ha!
+      event == :timeout -&gt;
+        :not_what_i_expected  # Ha!
+    end
   end
   {:ok, [&quot;sho ip route\r\n&quot;, &quot;Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP\r\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \r\n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\r\n       E1 - OSPF external type 1, E2 - OSPF external type 2\r\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\r\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\r\n       o - ODR, P - periodic downloaded static route\r\n\r\nGateway of last resort is 192.0.2.2 to network 0.0.0.0\r\n\r\n     198.51.100.0/32 is subnetted, 5 subnets\r\nC       198.51.100.1 is directly connected, Loopback0\r\ni L2    198.51.100.3 [115/100000] via 198.51.100.3, FastEthernet0/1.1\r\ni L2    198.51.100.2 [115/100000] via 198.51.100.2, FastEthernet0/0.1\r\ni L2    198.51.100.5 [115/300000] via 198.51.100.3, FastEthernet0/1.1\r\n                     [115/300000] via 198.51.100.2, FastEthernet0/0.1\r\ni L2    198.51.100.4 [115/200000] via 198.51.100.3, FastEthernet0/1.1\r\n     192.0.2.0/31 is subnetted, 1 subnets\r\nC       192.0.2.2 is directly connected, FastEthernet1/0\r\nS*   0.0.0.0/0 [1/0] via 192.0.2.2\r\nR1&gt;&quot;]}
 
-  iex&gt; exp_send proc, &quot;exit\r&quot;
+  iex&gt; exp_send process, &quot;exit\r&quot;
   :ok</code></pre>
 
       <footer class="footer">
