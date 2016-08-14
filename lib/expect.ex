@@ -33,7 +33,7 @@ defmodule Expect do
   def exp_close(process), do: Expect.close process
 
   @doc """
-  Calls `Expect.send/1`. Imported with `use Expect`.
+  Calls `Expect.send/2`. Imported with `use Expect`.
   """
   def exp_send(process, data), do: Expect.send process, data
 
@@ -105,7 +105,7 @@ defmodule Expect do
     end
   end
 
-  @doc """
+  @doc ~S"""
   Match and process incoming data from spawned process.
 
   `expect` behaves differently contingent on whether it is given a function or a
@@ -114,7 +114,7 @@ defmodule Expect do
   When a bare binary or regex pattern is provided, `expect` returns one of the
   following.
 
-    | on match   | nil                                             |
+    | on match   | `nil`                                           |
     | on timeout | `{:timeout, buffer}` or `{:default, buffer}`    |
     | on exit    | `{:default, buffer}`                            |
 
@@ -167,8 +167,6 @@ defmodule Expect do
       {:ok, :it_timed_out}
 
   """
-  @spec expect(process,  pattern)              ::        nil | expect_error
-  @spec expect(process, function)              :: {:ok, any} | expect_error
   @spec expect(process, pos_integer,  pattern) ::        nil | expect_error
   @spec expect(process, pos_integer, function) :: {:ok, any} | expect_error
 
