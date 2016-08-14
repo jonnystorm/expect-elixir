@@ -318,7 +318,7 @@
     </a>
     <span class="signature">expect(map, timeout \\ 10000, pattern_or_fun)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L175" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L173" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -352,7 +352,7 @@ following.</p>
 <col>
 </colgroup>
 <tr>
-<td style="text-align: left">on match</td><td style="text-align: left">nil</td>
+<td style="text-align: left">on match</td><td style="text-align: left"><code class="inline">nil</code></td>
 </tr>
 <tr>
 <td style="text-align: left">on timeout</td><td style="text-align: left"><code class="inline">{:timeout, buffer}</code> or <code class="inline">{:default, buffer}</code></td>
@@ -401,10 +401,9 @@ end
 {:ok, :match}
 
 iex&gt; expect spawned_process, fn {_, buffer} -&gt; buffer end
-{:ok, [&quot;some data</code></pre>
-<p>“, “some more data
-“]}</p>
-<pre><code class="iex elixir">iex&gt; expect process_without_data, fn {:data, buffer} -&gt; buffer end
+{:ok, [&quot;some data\r\n&quot;, &quot;some more data\r\n&quot;]}
+
+iex&gt; expect process_without_data, fn {:data, buffer} -&gt; buffer end
 {:error, :etimedout}
 
 iex&gt; expect spawned_process, fn buffer -&gt;
@@ -427,7 +426,7 @@ iex&gt; expect spawned_process, fn {:timeout, _} -&gt; :it_timed_out end
     </a>
     <span class="signature">send(process, data)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L207" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L205" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -455,7 +454,7 @@ iex&gt; expect spawned_process, fn {:timeout, _} -&gt; :it_timed_out end
     </a>
     <span class="signature">spawn(command)</span>
     
-      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L216" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/expect-elixir/blob/master/lib/expect.ex#L214" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
