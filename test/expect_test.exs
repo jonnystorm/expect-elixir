@@ -16,7 +16,7 @@ defmodule ExpectTest do
   end
 
   test "expect with fun matches :default on exit" do
-    send self, {nil, :result, %{status: 1}}
+    send self(), {nil, :result, %{status: 1}}
 
     assert {:ok, :it_exited} ==
       expect(%{pid: nil}, 100, fn {:default, _} -> :it_exited end)
@@ -31,8 +31,8 @@ defmodule ExpectTest do
     datum1 = "this is a test\r\n"
     datum2 = "this is also a test\r\n"
 
-    send self, {nil, :data, :out, datum1}
-    send self, {nil, :data, :out, datum2}
+    send self(), {nil, :data, :out, datum1}
+    send self(), {nil, :data, :out, datum2}
 
     assert {:ok, datum1 <> datum2} ==
       expect(%{pid: nil}, 1000, fn {:data, buffer} ->
@@ -44,7 +44,7 @@ defmodule ExpectTest do
   end
 
   test "expect with fun matches any" do
-    send self, {nil, :data, :out, ""}
+    send self(), {nil, :data, :out, ""}
 
     assert {:ok, :any} == expect(%{pid: nil}, 100, fn _ -> :any end)
   end
@@ -52,7 +52,7 @@ defmodule ExpectTest do
   test "expect with fun matches with binary pattern" do
     data = "this is a test\r\n"
 
-    send self, {nil, :data, :out, data}
+    send self(), {nil, :data, :out, data}
 
     assert {:ok, data} ==
       expect(%{pid: nil}, 100, fn {_, buffer} ->
@@ -66,7 +66,7 @@ defmodule ExpectTest do
   test "expect with fun matches with regex pattern" do
     data = "this is a test\r\n"
 
-    send self, {nil, :data, :out, data}
+    send self(), {nil, :data, :out, data}
 
     assert {:ok, data} ==
       expect(%{pid: nil}, 100, fn {_, buffer} ->
@@ -78,7 +78,7 @@ defmodule ExpectTest do
   end
 
   test "expect with fun returns error on process exit" do
-    send self, {nil, :result, %{status: status = 1}}
+    send self(), {nil, :result, %{status: status = 1}}
 
     assert {:error, :exit, status, ""} ==
       expect(%{pid: nil}, 100, fn {_, buffer} ->
@@ -98,13 +98,13 @@ defmodule ExpectTest do
   end
 
   test "expect with binary pattern returns error on process exit" do
-    send self, {nil, :result, %{status: status = 1}}
+    send self(), {nil, :result, %{status: status = 1}}
 
     assert expect(%{pid: nil}, 100, "") == {:error, :exit, status, ""}
   end
 
   test "expect with regex pattern returns error on process exit" do
-    send self, {nil, :result, %{status: status = 1}}
+    send self(), {nil, :result, %{status: status = 1}}
 
     assert expect(%{pid: nil}, 100, ~r/>$/) == {:error, :exit, status, ""}
   end
@@ -112,7 +112,7 @@ defmodule ExpectTest do
   test "expect with pattern matches any" do
     data = "this is a test\r\n"
 
-    send self, {nil, :data, :out, data}
+    send self(), {nil, :data, :out, data}
 
     assert expect(%{pid: nil}, 100, :any) == nil
   end
@@ -120,7 +120,7 @@ defmodule ExpectTest do
   test "expect with pattern matches with binary" do
     data = "this is a test\r\n"
 
-    send self, {nil, :data, :out, data}
+    send self(), {nil, :data, :out, data}
 
     assert expect(%{pid: nil}, 100, "test") == nil
   end
@@ -128,7 +128,7 @@ defmodule ExpectTest do
   test "expect with pattern matches with regex" do
     data = "this is a test\r\n"
 
-    send self, {nil, :data, :out, data}
+    send self(), {nil, :data, :out, data}
 
     assert expect(%{pid: nil}, 100, ~r/\btest\b/) == nil
   end
