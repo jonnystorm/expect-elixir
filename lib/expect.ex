@@ -1,17 +1,21 @@
-# Copyright © 2016 Jonathan Storm <the.jonathan.storm@gmail.com>
-# This work is free. You can redistribute it and/or modify it under the
-# terms of the Do What The Fuck You Want To Public License, Version 2,
-# as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 defmodule Expect do
   @moduledoc """
-  Tiny TCL/Expect-ish interface for the excellent Porcelain library.
+  Tiny TCL/Expect-ish interface for the excellent Porcelain
+  library.
   """
 
-  @type process :: %{pid: pid}
+  @type process
+    :: Porcelain.Process.t
+     | %{pid: any}
+
   @type pattern :: binary | Regex.t
-  @type expect_error :: {:error, :etimedout}
-                      | {:error, :exit, non_neg_integer, binary}
+  @type expect_error
+    :: {:error, :etimedout}
+     | {:error, :exit, non_neg_integer, binary}
 
   require Logger
 
@@ -30,30 +34,44 @@ defmodule Expect do
   @doc """
   Calls `Expect.close/1`. Imported with `use Expect`.
   """
-  def exp_close(process), do: Expect.close process
+  def exp_close(process),
+    do: Expect.close process
 
   @doc """
   Calls `Expect.send/2`. Imported with `use Expect`.
   """
-  def exp_send(process, data), do: Expect.send process, data
+  def exp_send(process, data),
+    do: Expect.send process, data
 
   @doc """
   Calls `Expect.spawn/1`. Imported with `use Expect`.
   """
-  def exp_spawn(command), do: Expect.spawn command
+  def exp_spawn(command),
+    do: Expect.spawn command
 
-  defp driver do
-    Application.get_env :expect_ex, :driver
-  end
+  defp driver,
+    do: Application.get_env(:expect_ex, :driver)
 
   @doc """
   Close a spawned process.
   """
   @spec close(process) :: :ok
+  def close(process),
+    do: driver().close process
 
-  def close(process) do
-    driver.close process
-  end
+  @doc """
+  Send `data` to a spawned process.
+  """
+  @spec send(process, binary) :: :ok
+  def send(process, data),
+    do: driver().send(process, data)
+
+  @doc """
+  Spawn a process for `command`.
+  """
+  @spec spawn(String.t) :: process
+  def spawn(command),
+    do: driver().spawn command
 
   defp timed_out?(timer) do
     ! Process.read_timer(timer)
@@ -73,16 +91,25 @@ defmodule Expect do
       end
 
     rescue
-      _ in [CondClauseError, FunctionClauseError, MatchError] ->
+      _ in [
+          CondClauseError,
+          FunctionClauseError,
+          MatchError,
+      ] ->
         :error
     end
   end
 
   defp _expect(true, _timer, fun, _pid, buffer) do
-    with :error <- get_expect_value(fun, {:timeout, buffer}),
-         :error <- get_expect_value(fun, {:default, buffer}),
-         do: {:error, :etimedout}
+    with :error <-
+           get_expect_value(fun, {:timeout, buffer}),
+
+         :error <-
+           get_expect_value(fun, {:default, buffer}),
+
+    do: {:error, :etimedout}
   end
+
   defp _expect(false, timer, fun, pid, buffer) do
     timeout = Process.read_timer(timer) || 100
 
@@ -90,41 +117,53 @@ defmodule Expect do
       {^pid, :data, :out, data} ->
         next_buffer = buffer <> data
 
-        with :error <- get_expect_value(fun, {:data, next_buffer}),
-             do: _expect timed_out?(timer), timer, fun, pid, next_buffer
+        with :error <-
+               get_expect_value(fun, {:data, next_buffer})
+        do
+          _expect(
+            timed_out?(timer),
+            timer,
+            fun,
+            pid,
+            next_buffer
+          )
+        end
 
       {^pid, :result, %{status: status}} ->
         :ok = Logger.info "Spawned process exited with status '#{status}'."
 
-        with :error <- get_expect_value(fun, {:default, buffer}),
-             do: {:error, :exit, status, buffer}
+        with :error <-
+               get_expect_value(fun, {:default, buffer}),
+        do: {:error, :exit, status, buffer}
 
     after
       timeout ->
-        _expect true, timer, fun, pid, buffer
+        _expect(true, timer, fun, pid, buffer)
     end
   end
 
   @doc ~S"""
   Match and process incoming data from spawned process.
 
-  `expect` behaves differently contingent on whether it is given a function or a
-  bare pattern.
+  `expect` behaves differently contingent on whether it is
+  given a function or a bare pattern.
 
-  When a bare binary or regex pattern is provided, `expect` returns one of the
-  following.
+  When a bare binary or regex pattern is provided, `expect`
+  returns one of the following.
 
     | on match   | `nil`                                           |
     | on timeout | `{:timeout, buffer}` or `{:default, buffer}`    |
     | on exit    | `{:default, buffer}`                            |
 
-  This behavior is useful for when you don't care about the incoming data so
-  much as the fact that it arrived (and matched your pattern).
+  This behavior is useful for when you don't care about the
+  incoming data so much as the fact that it arrived (and
+  matched your pattern).
 
-  When a function is provided, `expect` keeps a buffer of unmatched data which
-  is passed to `fun` when: new data arrives; the timeout period expires; the
-  spawned process exits. In each case, the value(s) passed to `fun` take(s) one
-  of the following forms.
+  When a function is provided, `expect` keeps a buffer of
+  unmatched data which is passed to `fun` when: new data
+  arrives; the timeout period expires; the spawned process
+  exits. In each case, the value(s) passed to `fun` take(s)
+  one of the following forms.
 
     | on match   | `{:data, buffer}`                               |
     | on timeout | `{:timeout, buffer}`, then `{:default, buffer}` |
@@ -167,14 +206,17 @@ defmodule Expect do
       {:ok, :it_timed_out}
 
   """
-  @spec expect(process, pos_integer,  pattern) ::        nil | expect_error
-  @spec expect(process, pos_integer, function) :: {:ok, any} | expect_error
+  @spec expect(process, pos_integer, pattern)
+    ::        nil | expect_error
+  @spec expect(process, pos_integer, function)
+    :: {:ok, any} | expect_error
+  def expect(process, timeout \\ 10_000, pattern_or_fun)
 
-  def expect(%{pid: pid}, timeout \\ 10_000, pattern_or_fun) do
+  def expect(%{pid: pid}, timeout, pattern_or_fun) do
     fun = get_expect_fun pattern_or_fun
-    timer = Process.send_after :nobody, nil, timeout
+    timer = Process.send_after(:nobody, nil, timeout)
 
-    _expect timed_out?(timer), timer, fun, pid, ""
+    _expect(timed_out?(timer), timer, fun, pid, "")
   end
 
   defp get_expect_fun(pattern_or_fun) do
@@ -195,23 +237,5 @@ defmodule Expect do
 
   defp wrap_pattern(pattern) do
     fn {:data, buffer} -> buffer =~ pattern end
-  end
-
-  @doc """
-  Send `data` to a spawned process.
-  """
-  @spec send(process, binary) :: :ok
-
-  def send(process, data) do
-    driver.send process, data
-  end
-
-  @doc """
-  Spawn a process for `command`.
-  """
-  @spec spawn(String.t) :: {:ok, process}
-
-  def spawn(command) do
-    driver.spawn command
   end
 end

@@ -1,14 +1,15 @@
-# Copyright © 2016 Jonathan Storm <the.jonathan.storm@gmail.com>
-# This work is free. You can redistribute it and/or modify it under the
-# terms of the Do What The Fuck You Want To Public License, Version 2,
-# as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 defmodule Expect.Driver do
   @moduledoc """
   A behaviour for Expect drivers.
   """
 
-  @type process :: %{pid: pid | nil}
+  @type process
+    :: Porcelain.Process.t
+     | %{pid: any}
 
   @doc "Close a spawned process."
   @callback close(process) :: :ok
