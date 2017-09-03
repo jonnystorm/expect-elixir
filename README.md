@@ -1,7 +1,6 @@
 # Expect-elixir
 
 [![Build Status](https://travis-ci.org/jonnystorm/expect-elixir.svg?branch=master)](https://travis-ci.org/jonnystorm/expect-elixir)
-[![Coverage Status](https://coveralls.io/repos/github/jonnystorm/expect-elixir/badge.svg?branch=master)](https://coveralls.io/github/jonnystorm/expect-elixir?branch=master)
 
 Tiny TCL/Expect-ish interface for the excellent [Porcelain](https://github.com/alco/porcelain) library.
 
