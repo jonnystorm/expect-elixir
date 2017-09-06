@@ -11,7 +11,7 @@ defmodule Expect.Driver.Porcelain do
   @type command :: String.t
   @type process
     :: Porcelain.Process.t
-     | %{pid: any}
+     | %{pid: pid | nil}
 
   @spec close(process)
     :: :ok

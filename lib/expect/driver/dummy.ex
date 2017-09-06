@@ -7,9 +7,12 @@ defmodule Expect.Driver.Dummy do
 
   @behaviour Expect.Driver
 
-  def close(_),   do: :ok
+  def close(_process),
+    do: :ok
 
-  def send(_, _), do: :ok
+  def send(_process, _data),
+    do: :ok
 
-  def spawn(_),   do: %{pid: nil}
+  def spawn(_command),
+    do: %{pid: nil}
 end

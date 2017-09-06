@@ -9,14 +9,20 @@ defmodule Expect.Driver do
 
   @type process
     :: Porcelain.Process.t
-     | %{pid: any}
+     | %{pid: pid | nil}
 
   @doc "Close a spawned process."
-  @callback close(process) :: :ok
+  @callback close(process)
+    :: :ok
 
   @doc "Send `data` to a spawned process."
-  @callback send(process, data :: binary) :: :ok
+  @callback send(
+    process :: process,
+    data    :: binary
+  ) :: :ok
 
   @doc "Spawn a process for `command`."
-  @callback spawn(command :: String.t) :: process
+  @callback spawn(
+    command :: String.t
+  ) :: process
 end
