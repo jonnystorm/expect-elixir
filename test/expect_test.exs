@@ -16,15 +16,19 @@ defmodule ExpectTest do
   end
 
   test "expect with fun matches :default on exit" do
+    fun = fn {:default, _} -> :it_exited end
+
     send self(), {nil, :result, %{status: 1}}
 
-    assert {:ok, :it_exited} ==
-      expect(%{pid: nil}, 100, fn {:default, _} -> :it_exited end)
+    assert expect(%{pid: nil}, 100, fun) ==
+      {:ok, :it_exited}
   end
 
   test "expect with fun matches :default on timeout" do
-    assert {:ok, :it_timed_out} ==
-      expect(%{pid: nil}, 1, fn {:default, _} -> :it_timed_out end)
+    fun = fn {:default, _} -> :it_timed_out end
+
+    assert expect(%{pid: nil}, 1, fun) ==
+      {:ok, :it_timed_out}
   end
 
   test "expect with fun matches data after two messages" do
@@ -44,9 +48,12 @@ defmodule ExpectTest do
   end
 
   test "expect with fun matches any" do
+    fun = fn _ -> :any end
+
     send self(), {nil, :data, :out, ""}
 
-    assert {:ok, :any} == expect(%{pid: nil}, 100, fn _ -> :any end)
+    assert expect(%{pid: nil}, 100, fun) ==
+      {:ok, :any}
   end
 
   test "expect with fun matches with binary pattern" do
@@ -90,55 +97,71 @@ defmodule ExpectTest do
   end
 
   test "expect with binary pattern times out" do
-    assert expect(%{pid: nil}, 1, "") == {:error, :etimedout}
+    assert expect(%{pid: nil}, 1, "") ==
+      {:error, :etimedout}
   end
 
   test "expect with regex pattern times out" do
-    assert expect(%{pid: nil}, 1, ~r/>$/) == {:error, :etimedout}
+    assert expect(%{pid: nil}, 1, ~r/>$/) ==
+      {:error, :etimedout}
   end
 
-  test "expect with binary pattern returns error on process exit" do
+  test """
+    expect with binary pattern returns error on process
+    exit
+  """ do
     send self(), {nil, :result, %{status: status = 1}}
 
-    assert expect(%{pid: nil}, 100, "") == {:error, :exit, status, ""}
+    assert expect(%{pid: nil}, 100, "") ==
+      {:error, :exit, status, ""}
   end
 
-  test "expect with regex pattern returns error on process exit" do
+  test """
+    expect with regex pattern returns error on process
+    exit
+  """ do
     send self(), {nil, :result, %{status: status = 1}}
 
-    assert expect(%{pid: nil}, 100, ~r/>$/) == {:error, :exit, status, ""}
+    assert expect(%{pid: nil}, 100, ~r/>$/) ==
+      {:error, :exit, status, ""}
   end
 
   test "expect with pattern matches any" do
-    data = "this is a test\r\n"
+    process = %{pid: nil}
+    data    = "this is a test\r\n"
 
     send self(), {nil, :data, :out, data}
 
-    assert expect(%{pid: nil}, 100, :any) == nil
+    assert expect(process, 100, :any) == process
   end
 
   test "expect with pattern matches with binary" do
-    data = "this is a test\r\n"
+    process = %{pid: nil}
+    data    = "this is a test\r\n"
 
     send self(), {nil, :data, :out, data}
 
-    assert expect(%{pid: nil}, 100, "test") == nil
+    assert expect(process, 100, "test") == process
   end
 
   test "expect with pattern matches with regex" do
-    data = "this is a test\r\n"
+    process = %{pid: nil}
+    data    = "this is a test\r\n"
 
     send self(), {nil, :data, :out, data}
 
-    assert expect(%{pid: nil}, 100, ~r/\btest\b/) == nil
+    assert expect(process, 100, ~r/\btest\b/) == process
   end
 
-  test "it spawns a process, sends data, and closes the process" do
-    process = exp_spawn("true")
+  test """
+    it spawns a process, sends data, and closes the
+    process
+  """ do
+    process = exp_spawn "true"
 
-    assert %{pid: _} = exp_spawn("true")
+    assert %{pid: _} = process
 
-    assert exp_send(process, "blarg") == :ok
+    assert exp_send(process, "blarg") == process
 
     assert exp_close(process) == :ok
   end
