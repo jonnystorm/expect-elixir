@@ -14,7 +14,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     ```elixir
     def deps do
-      [{:expect_ex, git: "https://github.com/jonnystorm/expect.git"}]
+      [{:expect_ex, git: "https://github.com/jonnystorm/expect-elixir.git"}]
     end
     ```
 
