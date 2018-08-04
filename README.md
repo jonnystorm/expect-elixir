@@ -12,19 +12,19 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   1. Add `expect_ex` to your list of dependencies in `mix.exs`:
 
-    ```elixir
-    def deps do
-      [{:expect_ex, git: "https://github.com/jonnystorm/expect-elixir.git"}]
-    end
-    ```
+  ```elixir
+  def deps do
+    [{:expect_ex, git: "https://github.com/jonnystorm/expect-elixir.git"}]
+  end
+  ```
 
   2. Ensure `expect_ex` is started before your application:
 
-    ```elixir
-    def application do
-      [applications: [:expect_ex]]
-    end
-    ```
+  ```elixir
+  def application do
+    [applications: [:expect_ex]]
+  end
+  ```
 
 ## Example
 
