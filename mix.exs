@@ -5,7 +5,7 @@ defmodule Expect.Mixfile do
     [ app: :expect_ex,
       version: "0.0.4",
       name: "expect-elixir",
-      source_url: "https://github.com/jonnystorm/expect-elixir",
+      source_url: "https://gitlab.com/jonnystorm/expect-elixir",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
