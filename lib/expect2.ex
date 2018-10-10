@@ -2,11 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-defmodule Expect do
+defmodule Expect2 do
   @moduledoc """
   Tiny TCL/Expect-ish interface for the excellent Porcelain
   library.
   """
+
+  alias Expect2, as: Expect
 
   @type process
     :: Porcelain.Process.t
@@ -18,12 +20,13 @@ defmodule Expect do
     :: binary
      | Regex.t
 
-  @type buffer         :: binary
-  @type exit_status    :: non_neg_integer
+  @type buffer      :: binary
+  @type exit_status :: non_neg_integer
 
   @type expect_error
     :: {:error, :etimedout}
-     | {:error, :exit, exit_status, buffer}
+     | {:error, {:exit, exit_status, buffer}}
+     | {:error, :esrch}
 
   require Logger
 
@@ -51,7 +54,7 @@ defmodule Expect do
   Calls `Expect.send/2`. Imported with `use Expect`.
   """
   @spec exp_send(process, data)
-    :: process
+    :: {:ok, process}
   @spec exp_send(expect_error, data)
     :: expect_error
   def exp_send(process, data),
@@ -61,7 +64,7 @@ defmodule Expect do
   Calls `Expect.spawn/1`. Imported with `use Expect`.
   """
   @spec exp_spawn(command)
-    :: process
+    :: {:ok, process}
   def exp_spawn(command),
     do: Expect.spawn(command)
 
@@ -80,16 +83,20 @@ defmodule Expect do
   Send `data` to a spawned process.
   """
   @spec send(process, data)
-    :: process
+    :: {:ok, process}
   @spec send(expect_error, data)
     :: expect_error
-  def send(%{pid: _} = process, data) do
-    driver().send(process, data)
+  def send(%{pid: pid} = process, data) do
+    if Process.alive?(pid) do
+      driver().send(process, data)
 
-    process
+      {:ok, process}
+    else
+      {:error, :esrch}
+    end
   end
 
-  def send({:error, _} = error, data) do
+  def send({:error, {_, _, _}} = error, data) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not send #{inspect data}: got #{inspect error}"
@@ -97,7 +104,7 @@ defmodule Expect do
     error
   end
 
-  def send({:error, _, _, _} = error, data) do
+  def send({:error, _} = error, data) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not send #{inspect data}: got #{inspect error}"
@@ -109,21 +116,16 @@ defmodule Expect do
   Spawn a process for `command`.
   """
   @spec spawn(String.t)
-    :: process
+    :: {:ok, process}
   def spawn(command),
-    do: driver().spawn(command)
+    do: {:ok, driver().spawn(command)}
 
   defp get_expect_value(process, fun, result) do
     try do
       case fun.(result) do
-        true ->
-          process
-
-        false ->
-          :error
-
-        value ->
-          {:ok, value}
+        true  -> {:ok, process}
+        false -> :error
+        value -> {:ok, value}
       end
 
     rescue
@@ -143,16 +145,20 @@ defmodule Expect do
     true = _timed_out,
     _timer,
     fun,
-    proc = _process,
+    %{pid: pid} = proc = _process,
     buffer
   ) do
-    with :error <-
-           get_expect_value(proc, fun, {:timeout, buffer}),
+    if not Process.alive?(pid) do
+      {:error, :esrch}
+    else
+      with :error <-
+             get_expect_value(proc, fun, {:timeout, buffer}),
 
-         :error <-
-           get_expect_value(proc, fun, {:default, buffer}),
+           :error <-
+             get_expect_value(proc, fun, {:default, buffer}),
 
-    do: {:error, :etimedout}
+        do: {:error, :etimedout}
+    end
   end
 
   defp _expect(
@@ -186,7 +192,7 @@ defmodule Expect do
         with :error <-
            get_expect_value(proc, fun, {:default, buffer}),
 
-        do: {:error, :exit, status, buffer}
+          do: {:error, {:exit, status, buffer}}
 
     after
       timeout ->
@@ -203,9 +209,10 @@ defmodule Expect do
   When a bare binary or regex pattern is provided, `expect`
   returns one of the following.
 
-    | on match   | `process`                              |
-    | on timeout | `{:error, :etimedout}`                 |
-    | on exit    | `{:error, :exit, exit_status, buffer}` |
+    | on match     | `process`                                |
+    | on timeout   | `{:error, :etimedout}`                   |
+    | on exit      | `{:error, {:exit, exit_status, buffer}}` |
+    | proc is dead | `{:error, :esrch}`                       |
 
   This behavior is useful for when you don't care about the
   incoming data so much as the fact that it arrived (and
@@ -224,7 +231,7 @@ defmodule Expect do
   ## Examples
 
       iex> expect spawned_process, "# "
-      %Porcelain.Process{}
+      {:ok, %Porcelain.Process{}}
 
       iex> expect spawned_process, fn {event, buffer} ->
         cond do
@@ -241,7 +248,7 @@ defmodule Expect do
       iex> expect spawned_process, fn {_, buffer} ->
         buffer
       end
-      {:ok, ["some data\r\n", "some more data\r\n"]}
+      {:ok, "some data\nsome more data\n"}
       
       iex> expect process_without_data, fn {:data, buffer} ->
         buffer
@@ -260,9 +267,19 @@ defmodule Expect do
         :it_timed_out
       end
       {:ok, :it_timed_out}
+
+      iex> expect dead_process, fn {:data, buffer} ->
+        buffer
+      end
+      {:error, {:exit, 255, ""}}
+
+      iex> expect dead_process, fn {:data, buffer} ->
+        buffer
+      end
+      {:error, :esrch}
   """
   @spec expect(process, timeout, pattern)
-    :: process
+    :: {:ok, process}
      | expect_error
   @spec expect(process, timeout, function)
     :: {:ok, any}
@@ -309,7 +326,13 @@ defmodule Expect do
     raise message
   end
 
-  def expect({:error,       _} = error, _timeout, term) do
+  def expect({:ok, %{pid: _} = process}, timeout, term) do
+    # Facilitate piping between `exp_send` and `expect`
+    #
+    expect(process, timeout, term)
+  end
+
+  def expect({:error, {_, _, _}} = error, _timeout, term) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not expect #{inspect term}: got #{inspect error}"
@@ -317,7 +340,7 @@ defmodule Expect do
     error
   end
 
-  def expect({:error, _, _, _} = error, _timeout, term) do
+  def expect({:error, _} = error, _timeout, term) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not expect #{inspect term}: got #{inspect error}"
