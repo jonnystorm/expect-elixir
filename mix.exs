@@ -43,7 +43,10 @@ defmodule Expect.Mixfile do
   end
 
   defp deps do
-    [ {:porcelain, "~> 2.0"},
+    [ { :porcelain,
+        git: "https://github.com/alco/porcelain",
+        ref: "acfc0f0a6987aadb08f495a578e22ef624342685"
+      },
       {:ex_doc, "~> 0.13", only: :dev},
     ]
   end

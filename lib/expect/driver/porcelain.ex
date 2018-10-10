@@ -32,8 +32,10 @@ defmodule Expect.Driver.Porcelain do
   @spec spawn(command)
     :: process
   def spawn(command) do
-    Porcelain.spawn_shell command,
+    Porcelain.spawn_shell(
+      command,
       in: :receive,
       out: {:send, self()}
+    )
   end
 end

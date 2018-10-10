@@ -45,7 +45,7 @@ defmodule Expect do
   @spec exp_close(process)
     :: :ok
   def exp_close(process),
-    do: Expect.close process
+    do: Expect.close(process)
 
   @doc """
   Calls `Expect.send/2`. Imported with `use Expect`.
@@ -63,7 +63,7 @@ defmodule Expect do
   @spec exp_spawn(command)
     :: process
   def exp_spawn(command),
-    do: Expect.spawn command
+    do: Expect.spawn(command)
 
   defp driver,
     do: Application.get_env(:expect_ex, :driver)
@@ -74,7 +74,7 @@ defmodule Expect do
   @spec close(process)
     :: :ok
   def close(process),
-    do: driver().close process
+    do: driver().close(process)
 
   @doc """
   Send `data` to a spawned process.
@@ -89,7 +89,7 @@ defmodule Expect do
     process
   end
 
-  def send({:error,       _} = error, data) do
+  def send({:error, _} = error, data) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not send #{inspect data}: got #{inspect error}"
@@ -111,7 +111,7 @@ defmodule Expect do
   @spec spawn(String.t)
     :: process
   def spawn(command),
-    do: driver().spawn command
+    do: driver().spawn(command)
 
   defp get_expect_value(process, fun, result) do
     try do
@@ -280,7 +280,7 @@ defmodule Expect do
   def expect(%{pid: _} = process, timeout, pattern)
       when is_binary(pattern)
   do
-    fun = wrap_pattern_in_function pattern
+    fun = wrap_pattern_in_function(pattern)
 
     expect(process, timeout, fun)
   end
@@ -290,13 +290,13 @@ defmodule Expect do
     timeout,
     %Regex{} = pattern
   ) do
-    fun = wrap_pattern_in_function pattern
+    fun = wrap_pattern_in_function(pattern)
 
     expect(process, timeout, fun)
   end
 
   def expect(%{pid: _} = process, timeout, :any) do
-    fun = wrap_pattern_in_function ""
+    fun = wrap_pattern_in_function("")
 
     expect(process, timeout, fun)
   end
