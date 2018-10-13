@@ -2,35 +2,33 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-defmodule Expect.Driver.Porcelain do
+defmodule Expect.Driver.Porcelain2 do
   @moduledoc false
+  alias Porcelain2, as: Porcelain
 
   @behaviour Expect.Driver
 
-  @type data    :: binary
-  @type command :: String.t
-  @type process
-    :: Porcelain.Process.t
-     | %{pid: pid | nil}
+  @type data :: binary
+  @type command :: String.t()
+  @type process ::
+          Porcelain.Process.t()
+          | %{pid: pid | nil}
 
-  @spec close(process)
-    :: :ok
+  @spec close(process) :: :ok
   def close(process) do
-    true = Porcelain.Process.stop process
+    true = Porcelain.Process.stop(process)
 
     :ok
   end
 
-  @spec send(process, data)
-    :: :ok
+  @spec send(process, data) :: :ok
   def send(process, data) do
     _ = Porcelain.Process.send_input(process, data)
 
     :ok
   end
 
-  @spec spawn(command)
-    :: process
+  @spec spawn(command) :: process
   def spawn(command) do
     Porcelain.spawn_shell(
       command,
