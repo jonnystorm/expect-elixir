@@ -2,8 +2,7 @@ defmodule Expect.Mixfile do
   use Mix.Project
 
   def project do
-    [
-      app: :expect_ex,
+    [ app: :expect_ex,
       version: "0.0.4",
       name: "expect-elixir",
       source_url: "https://gitlab.com/jonnystorm/expect-elixir",
@@ -46,8 +45,10 @@ defmodule Expect.Mixfile do
 
   defp deps do
     [
-      {:porcelain,
-       git: "https://github.com/alco/porcelain", ref: "acfc0f0a6987aadb08f495a578e22ef624342685"},
+      { :porcelain,
+        git: "https://github.com/alco/porcelain",
+        ref: "acfc0f0a6987aadb08f495a578e22ef624342685"
+      },
       {:ex_doc, "~> 0.13", only: :dev}
     ]
   end

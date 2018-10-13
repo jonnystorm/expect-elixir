@@ -4,15 +4,14 @@
 
 defmodule Expect.Driver.Porcelain2 do
   @moduledoc false
-  alias Porcelain2, as: Porcelain
 
   @behaviour Expect.Driver
 
   @type data :: binary
   @type command :: String.t()
-  @type process ::
-          Porcelain.Process.t()
-          | %{pid: pid | nil}
+  @type process
+    :: Porcelain.Process.t()
+     | %{pid: pid | nil}
 
   @spec close(process) :: :ok
   def close(process) do

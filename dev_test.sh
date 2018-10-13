@@ -4,6 +4,7 @@ function run
 {
   env MIX_ENV=test ERL_COMPILER_OPTIONS=bin_opt_info \
     mix clean &&
+    mix do deps.get, deps.compile &&
     mix compile --force &&
     mix test \
       --include integrated \
