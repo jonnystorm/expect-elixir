@@ -309,7 +309,7 @@ defmodule Expect do
     raise message
   end
 
-  def expect({:error,       _} = error, _timeout, term) do
+  def expect({:error, _} = error, _timeout, term) do
     # Facilitate piping between `exp_send` and `expect`
     #
     :ok = Logger.info "Will not expect #{inspect term}: got #{inspect error}"
