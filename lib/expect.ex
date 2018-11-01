@@ -93,7 +93,7 @@ defmodule Expect do
   def send({:ok, %{pid: _} = process}, data) do
     # Facilitate piping between `exp_send` and `expect`
     #
-    driver().send(process, data)
+    Expect.send(process, data)
   end
 
   def send({:error, _} = error, data) do
