@@ -11,6 +11,7 @@ defmodule Expect do
   @type process
     :: Porcelain.Process.t
      | %{pid: any}
+     | {:ok, %{pid: any}}
 
   @type data    :: binary
   @type command :: String.t
@@ -87,6 +88,12 @@ defmodule Expect do
     driver().send(process, data)
 
     process
+  end
+
+  def send({:ok, %{pid: _} = process}, data) do
+    # Facilitate piping between `exp_send` and `expect`
+    #
+    driver().send(process, data)
   end
 
   def send({:error, _} = error, data) do
